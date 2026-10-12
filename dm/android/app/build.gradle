@@ -1,0 +1,40 @@
+plugins { id 'com.android.application' }
+
+android {
+    namespace 'org.d2rm.android'
+    buildFeatures { resValues true }
+    compileSdk 37
+    ndkVersion '28.2.13676358'
+    defaultConfig {
+        applicationId 'org.d2rm.android'
+        minSdk 35
+        targetSdk 37
+        versionCode 1
+        versionName '0.1.0'
+        testInstrumentationRunner 'org.d2rm.android.ImportInstrumentation'
+        ndk { abiFilters 'x86_64', 'arm64-v8a' }
+    }
+    flavorDimensions += 'resources'
+    productFlavors {
+        game { dimension 'resources'; resValue 'string', 'app_name', 'D2R Mobile' }
+        fixture { dimension 'resources'; applicationIdSuffix '.fixture'; resValue 'string', 'app_name', 'D2R Mobile TEST' }
+    }
+    externalNativeBuild { cmake { path file('../native/CMakeLists.txt'); version '3.22.1' } }
+    compileOptions { sourceCompatibility JavaVersion.VERSION_21; targetCompatibility JavaVersion.VERSION_21 }
+    testOptions { unitTests.returnDefaultValues = true }
+}
+
+['game', 'fixture'].each { flavor ->
+    def generated = layout.buildDirectory.dir("generated/contracts/${flavor}")
+    def contractTask = tasks.register("generate${flavor.capitalize()}Contract", Copy) {
+        from(rootProject.file("contracts/${flavor}-contract.json"))
+        into(generated)
+        rename { 'contract.json' }
+    }
+    android.sourceSets.getByName(flavor).assets.srcDir(generated.get().asFile)
+    tasks.configureEach { task ->
+        if ((task.name.startsWith("merge${flavor.capitalize()}") && task.name.endsWith('Assets')) ||
+                (task.name.toLowerCase().contains(flavor) && task.name.toLowerCase().contains('lint'))) task.dependsOn(contractTask)
+    }
+}
+dependencies { testImplementation 'junit:junit:4.13.2' }

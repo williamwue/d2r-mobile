@@ -3,3 +3,9 @@
 .iosdd_mac/
 .iosdd_*/
 .DS_Store
+
+dm/android/.gradle/
+dm/android/**/build/
+dm/android/**/.cxx/
+dm/android/local.properties
+dm/android/**/__pycache__/

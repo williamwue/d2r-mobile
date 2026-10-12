@@ -1,0 +1,7 @@
+cmake_minimum_required(VERSION 3.22.1)
+project(d2rm_probe LANGUAGES CXX)
+add_library(d2rm_probe SHARED probe.cpp)
+target_compile_features(d2rm_probe PRIVATE cxx_std_17)
+target_compile_options(d2rm_probe PRIVATE -Wall -Wextra -Werror)
+target_link_libraries(d2rm_probe PRIVATE dl)
+target_link_options(d2rm_probe PRIVATE "-Wl,-z,max-page-size=16384")
