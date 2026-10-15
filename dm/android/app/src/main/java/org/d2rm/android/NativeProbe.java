@@ -8,4 +8,5 @@ public final class NativeProbe {
     private NativeProbe() {}
 
     public static native String read();
+    public static native String runArm64BridgeSuite();
 }

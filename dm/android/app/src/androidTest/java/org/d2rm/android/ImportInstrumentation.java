@@ -16,11 +16,17 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
 public final class ImportInstrumentation extends Instrumentation {
+    private boolean bridgeSuite;
     private int passed;
     private static final byte[] DATA = new byte[]{1,2,3,4};
     private static final String CONTRACT = "{\"schemaVersion\":1,\"kind\":\"synthetic-fixture\",\"contractId\":\"device-test-v1\",\"productVersion\":\"test\",\"nsoSha256\":{},\"archives\":[{\"name\":\"test.data\",\"size\":4}]}";
-    @Override public void onCreate(Bundle arguments) { super.onCreate(arguments); start(); }
+    @Override public void onCreate(Bundle arguments) {
+        super.onCreate(arguments);
+        bridgeSuite = arguments != null && "arm64-bridge".equals(arguments.getString("suite"));
+        start();
+    }
     @Override public void onStart() {
+        if (bridgeSuite) { Arm64BridgeInstrumentation.run(this); return; }
         Bundle result = new Bundle();
         try {
             ResourceContract contract = new ResourceContract(bytes(CONTRACT), false);

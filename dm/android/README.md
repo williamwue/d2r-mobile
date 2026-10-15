@@ -54,3 +54,4 @@ python tools/verify.py unit
 ## 验证边界
 
 x86_64 模拟器用于应用、SAF 文件访问、导入状态和 JNI 加载验证。设备报告中的 Vulkan 枚举只是驱动能力查询，没有渲染游戏。OPPO X9 Ultra / Android 17 真机仍需单独验证 ARM64 指令执行、TLS/x18、页大小、驱动兼容性、输入、温度和持续性能。
+[Synthetic ARM64 bridge ABI and verification](docs/arm64-bridge.md)
