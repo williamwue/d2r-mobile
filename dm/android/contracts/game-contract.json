@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
   "kind": "game-resources",
-  "contractId": "d2r-switch-3.3.94012-r40-v1",
-  "productVersion": "3.3.94012-r40",
+  "contractId": "d2r-switch-3.3.94012-r44-v1",
+  "productVersion": "3.3.94012-r44",
   "nsoSha256": {
     "main": "55fd909bb7230b002357e5b0d8499c11f06888f345c49e69eb4734df44a27d0e",
     "sdk": "1c9f198a91c0bcfee5cf8f5b53fb941895e91334dfb766ce79fc68576797f017",

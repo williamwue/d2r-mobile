@@ -22,10 +22,10 @@
           "const": "game-resources"
         },
         "contractId": {
-          "const": "d2r-switch-3.3.94012-r40-v1"
+          "const": "d2r-switch-3.3.94012-r44-v1"
         },
         "productVersion": {
-          "const": "3.3.94012-r40"
+          "const": "3.3.94012-r44"
         },
         "exefs": {
           "type": "array",
