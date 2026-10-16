@@ -57,6 +57,8 @@ public final class MainActivity extends Activity implements ImportApplication.Ob
         try { probe = deviceReport(NativeProbe.read()); } catch (Throwable failure) { probe = "原生探测不可用：" + failure.getClass().getSimpleName(); }
         TextView report = text("Android " + Build.VERSION.RELEASE + " · API " + Build.VERSION.SDK_INT + "\n" + Build.MANUFACTURER + " " + Build.MODEL + "\n" + probe, 14, muted);
         report.setTextIsSelectable(true); device.addView(report);
+        Button graphics = button("打开 Vulkan 测试画面", device);
+        graphics.setOnClickListener(v -> startActivity(new Intent(this, GraphicsProbeActivity.class)));
         setContentView(scroll);
     }
     private LinearLayout section(LinearLayout page, String heading) {

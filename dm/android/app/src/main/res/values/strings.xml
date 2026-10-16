@@ -1,0 +1,12 @@
+<resources>
+    <string name="vulkan_probe_title">Vulkan 图形探针 · 测试画面</string>
+    <string name="vulkan_probe_scope">红 / 绿 / 蓝三色由 Vulkan 绘制，不包含游戏内容。游戏运行时尚不可用。</string>
+    <string name="vulkan_probe_surface">Vulkan 三色测试画面</string>
+    <string name="vulkan_probe_waiting">等待可用显示表面</string>
+    <string name="vulkan_probe_back">返回设备检查</string>
+    <string name="vulkan_probe_frames">已提交测试画面 %1$d 帧\n%2$s · %3$d × %4$d</string>
+    <string name="vulkan_probe_paused">探针已暂停，图形会话已释放</string>
+    <string name="vulkan_probe_failed">图形探针失败：%1$s</string>
+    <string name="vulkan_probe_report_error">图形报告无法解析</string>
+    <string name="vulkan_probe_release_timeout">图形会话释放超时</string>
+</resources>

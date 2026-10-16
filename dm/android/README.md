@@ -30,6 +30,10 @@ adb push G:\DevCaches\Temp\d2r-android-fixture /sdcard/Download/
 
 打开 TEST 应用，通过系统目录选择器选择刚复制的文件夹。所选目录必须直接包含 `game-manifest.json` 和三个数据文件。导入完成后重启应用，检查资源状态及设备报告。选择同一目录导入正式应用应被拒绝。
 
+设备报告下的“打开 Vulkan 测试画面”可运行独立三色呈现探针，不需要导入任何资源。
+它通过真实 Vulkan render pass 和交换链出图，检查前后台与旋转后的会话恢复；不执行游戏、NVN 指令或游戏着色器。
+构建、设备检查命令与验证范围见 [Vulkan 呈现探针](docs/vulkan-probe.md)。
+
 ## 准备正式资源
 
 输入必须是已提取的原始 `Update` 目录，包含 `ExeFS`、`RomFS/data` 和项目要求的构建清单。NSP、NSZ、XCI 包文件不能直接导入本应用。此工具不提取安装包，也不获取密钥。
