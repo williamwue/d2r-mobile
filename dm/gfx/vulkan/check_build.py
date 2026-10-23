@@ -13,8 +13,16 @@ for p in files:
  obj=out/(p.stem+'.o');opts=['-std=c++17'] if p.suffix=='.cpp' else []
  if p.name=='nvn_vk.c':opts+=['-I'+str(dm/'android/compat/include'),'-include',str(dm/'android/compat/include/dm_android_compat.h')]
  run([str(tool/'bin/clang.exe'),*common,*opts,'-c',str(p),'-o',str(obj)]);objects.append(obj)
-# Only external host dependencies: diagnostics + hle_nvn serial generator.
-# This confirms graphics linkage, not full host linkage or execution semantics.
-stub=out/'link_host_stubs.c';stub.write_text('#include <stdint.h>\n#include <stdlib.h>\nvoid log_(const char*f,...){(void)f;}\nvoid die(const char*f,...){(void)f;abort();}\nuint64_t nvn_new_serial(void){static uint64_t n;return ++n;}\n',encoding='utf-8');obj=out/'link_host_stubs.o';run([str(tool/'bin/clang.exe'),*common,'-c',str(stub),'-o',str(obj)]);objects.append(obj)
+# 只补独立图形链接所需的宿主接口：诊断、序号、缺页/写入钩子和显示刷新率；不执行桩，也不验证完整宿主或运行语义。
+# Supply host dependencies for the isolated graphics link: diagnostics, serials, fault/write hooks and display refresh; the stubs are not executed and do not verify the full host or runtime semantics.
+stub=out/'link_host_stubs.c';stub.write_text(
+ '#include <stdint.h>\n#include <stdlib.h>\n'
+ 'void log_(const char*f,...){(void)f;}\n'
+ 'void die(const char*f,...){(void)f;abort();}\n'
+ 'uint64_t nvn_new_serial(void){static uint64_t n;return ++n;}\n'
+ 'void dm_fault_hook_register(int (*fn)(void *, int, void *)){(void)fn;}\n'
+ 'void dm_guest_write_prep_register(void (*fn)(void *, size_t)){(void)fn;}\n'
+ 'double front_display_refresh(char *name, size_t n){(void)name;(void)n;return 0;}\n',
+ encoding='utf-8');obj=out/'link_host_stubs.o';run([str(tool/'bin/clang.exe'),*common,'-c',str(stub),'-o',str(obj)]);objects.append(obj)
 lib=out/'libdm_vulkan_link_check.so';run([str(tool/'bin/clang++.exe'),*common,'-shared','-Wl,--no-undefined','-o',str(lib),*[str(p) for p in objects],'-lvulkan','-landroid','-llog'])
 (out/'validation.json').write_text(json.dumps({'checks':log,'artifact':str(lib),'sha256':hashlib.sha256(lib.read_bytes()).hexdigest()},indent=2),encoding='utf-8');print('graphics-only link OK; no device validation')

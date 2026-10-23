@@ -28,7 +28,7 @@ class AssetContract(unittest.TestCase):
             native.mkdir(); hud.mkdir(); (overlay / 'data').mkdir(parents=True)
             for name in [f'dm_native_skill_{i}.png' for i in range(9)] + ['dm_native_circle.png', 'dm_native_map.png', 'dm_native_menu.png']:
                 (native / name).write_bytes(b'synthetic-art')
-            for name in ['base_full.png', 'lvl_0.png', 'lvl_1.png', 'lvl_d0.png', 'lvl_d1.png', 'slot.png', 'glyph.png'] + [f'diff_{i}.png' for i in range(1, 9)]:
+            for name in ['base_full.png', 'lvl_0.png', 'lvl_1.png', 'lvl_d0.png', 'lvl_d1.png', 'slot.png', 'glyph.png'] + [f'diff_{i}.png' for i in range(1, 9)] + [f'sil_dm_native_skill_{i}.png' for i in range(9)]:
                 (hud / name).write_bytes(b'synthetic-hud')
             ui = {key: {'glyphs': {'0': {'file': 'glyph.png'}}} for key in ('lv', 'badge', 'vital')}
             for group in ui.values():
@@ -46,6 +46,7 @@ class AssetContract(unittest.TestCase):
             entries = stage.overlay_contract.verify_manifest(overlay, fingerprint)
             self.assertIn('touchart/dm_native_skill_8.png', entries)
             self.assertIn('hud_v4_ui/glyph.png', entries)
+            self.assertIn('hud_v4_ui/sil_dm_native_skill_8.png', entries)
             (overlay / 'touchart/dm_native_skill_8.png').write_bytes(b'changed')
             with self.assertRaises(stage.overlay_contract.ContractError):
                 stage.overlay_contract.verify_manifest(overlay, fingerprint)
@@ -55,7 +56,7 @@ class AssetContract(unittest.TestCase):
             root = Path(temp); strings.generate(root)
             for folder in ('values', 'values-zh'):
                 text = (root / folder / 'strings.xml').read_text(encoding='utf-8')
-                for key in ('dmhudlife', 'dmhudmana', 'dmtccancel', 'dmandroidhudlevel'):
+                for key in ('dmHudLife', 'dmHudMana', 'dmTcCancel', 'dmAndroidHudLevel'):
                     self.assertIn('name="' + key + '"', text)
                 self.assertIn('formatted="false"', text)
 
