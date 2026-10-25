@@ -45,3 +45,17 @@ adb -s emulator-5554 shell am instrument -w -r -e suite vulkan-probe org.d2rm.an
 原始日志、源文件与 APK 摘要、环境属性和 PNG 位于 `G:\Projects\.agent-store\d2r-android\evidence\vulkan-probe-20261016-r2`。设备面板因 `daemon.lock is not a directory` 不可用，本轮通过指定 serial 的 adb 驱动模拟器。
 
 该结果只证明这一模拟器及软件图形后端上的呈现探针通过。OPPO/ARM64 真机、Vulkan validation layer、正式游戏输入、CPU/HLE、游戏着色器、NVN 回放和性能均未由本轮验收。后续用同一套检查在真机复验，再进入真实游戏运行时开发。
+
+
+## 2026-10-25 分支价值复核 / Branch review
+
+该探针仍有独立价值：不需要游戏资源即可验证 Vulkan 呈现与生命周期，可以作为完整游戏之外的环境对照。本次将它纳入现有导入器主线；Android v2 上游移植线通过独立整合 PR 审查，不互相覆盖。
+
+The resource-free presentation/lifecycle probe remains useful as a controlled graphics diagnostic. It is integrated into the import-shell mainline independently of the upstream v2 port, which requires a separate integration review.
+
+- 冻结资源契约核对与 35 项 Python 工具测试通过；fixture JVM 套件 24 项通过。
+- Fixture debug APK 和 instrumentation APK 构建通过，包含 ARM64 和 x86_64 原生库。
+- 在本机 `AppVanta_Verification_API37` / Android 17 x86_64 模拟器重新执行 `vulkan-probe` instrumentation，51 项检查通过，`status=passed`、`INSTRUMENTATION_CODE: -1`；会话创建与销毁均为 12。
+- PixelCopy 检查了初始三色呈现、三轮后台恢复、Activity 重建和旋转后的实际 Surface 像素。本次软件图形设备报告为 `Goldfish GFXStream (llvmpipe (LLVM 21.1.2, 256 bits))`。
+
+Validation: contract check, 35 Python tests, 24 fixture JVM tests and both fixture APK builds passed. All 51 emulator graphics checks passed, including PixelCopy and lifecycle recovery; 12 sessions were created and destroyed. This is emulator-only evidence, not OPPO/ARM64 physical-device acceptance, game execution or performance acceptance. The raw report is in the local temporary directory as `d2r-vulkan-probe-review-20261025.log`.
